@@ -1,0 +1,23 @@
+(function executeRule(current, previous /*null when async*/) {
+
+    if (current.cat_item.name == "Smart Library Request") {
+
+        // Auto-assign to Library Group
+        var grp = new GlideRecord('sys_user_group');
+        grp.get('name', 'Library Support');
+
+        if (grp.isValidRecord()) {
+            current.assignment_group = grp.sys_id;
+        }
+
+        // High priority if cost > 500
+        if (current.variables.estimated_cost > 500) {
+            current.priority = 2; // High
+        } else {
+            current.priority = 4; // Low
+        }
+
+        current.update();
+    }
+
+})(current, previous);
